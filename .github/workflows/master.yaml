@@ -23,7 +23,7 @@ jobs:
         # I (Sean) took anothrNick/github-tag-action@1.17.2 and added the Git fix as a temporary solution until the "v" issue is fixed.
         # See diff here (https://github.com/mayitbeegh/github-tag-action/commit/3a9f28ceef4d67adcaad320cabf719aa635e5a60)
         env:
-          GITHUB_TOKEN: ${{ secrets.CI_BOT_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           RELEASE_BRANCHES: main
           DEFAULT_BUMP: patch
@@ -43,7 +43,7 @@ jobs:
         run: |
           sed "s/v0.0.1/${{ needs.bump-version.outputs.version }}/g" ./charts/unionoperator/README.md  > temp.txt && mv temp.txt ./charts/unionoperator/README.md
           grep -rlZ "version:[^P]*# VERSION" ./charts/unionoperator/Chart.yaml | xargs -0 sed -i "s/version:[^P]*# VERSION/version: ${{ needs.bump-version.outputs.version }} # VERSION/g"
-          grep -rlZ "version:[^P]*# APP_VERSION" ./charts/unionoperator/Chart.yaml | xargs -0 sed -i "s/version:[^P]*# APP_VERSION/version: ${{ needs.bump-version.outputs.version }} # APP_VERSION/g"
+          grep -rlZ "appVersion:[^P]*# APP_VERSION" ./charts/unionoperator/Chart.yaml | xargs -0 sed -i "s/appVersion:[^P]*# APP_VERSION/appVersion: ${{ needs.bump-version.outputs.version }} # APP_VERSION/g"
       - name: Configure Git
         run: |
           git config user.name "${{ github.actor }}"
@@ -51,5 +51,5 @@ jobs:
       - name: Run chart-releaser
         uses: stefanprodan/helm-gh-pages@v1.4.1
         with:
-          token: "${{ secrets.CI_BOT_PAT }}"
+          token: "${{ secrets.GITHUB_TOKEN }}"
           linting: off
