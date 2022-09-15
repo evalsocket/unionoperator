@@ -5,6 +5,7 @@ on:
     branches:
       - main
 
+
 jobs:
   bump-version:
     name: Unionoperator Bump Version
